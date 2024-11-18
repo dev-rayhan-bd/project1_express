@@ -39,14 +39,37 @@ app.get("/:userId/:subId", logger, (req, res) => {
     console.log(req.params);
     res.send("hello developer Rayhan");
 });
-app.get("/", logger, (req, res) => {
+app.get("/", logger, (req, res, next) => {
     console.log(req.query);
-    res.send("hello world!");
+    try {
+        res.send(something);
+    }
+    catch (error) {
+        // console.log(error);
+        next(error);
+    }
 });
 app.post("/", (req, res) => {
     console.log(req.body);
     res.json({
         message: "succesfully recived data",
     });
+});
+app.all("*", (req, res) => {
+    res.status(400).json({
+        success: false,
+        message: 'route not found'
+    });
+});
+//global error handling middleware
+app.use((error, req, res, next) => {
+    if (error) {
+        if (error) {
+            res.status(400).json({
+                success: false,
+                message: 'something went wrong'
+            });
+        }
+    }
 });
 exports.default = app;
